@@ -38,28 +38,31 @@ const MORSE_TABLE = {
 };
 
 function decode(expr) {
-    const resultArr = expr.match(/.{1,10}/g).reduce((acc, item) => {
-      if (item === "**********") {
+    const resArr = expr.match(/.{1,10}/g).reduce((acc, el) => {
+      if (el === "**********") {
         acc.push(' ');
       }
-      else if (item.startsWith(0)) {
-        acc.push(decoderBinaryToMorse(Number(item)));
+      else if (el.startsWith(0)) {
+        acc.push(decoderBinaryToMorse(Number(el)));
   
       }
       else {
-        acc.push(decoderBinaryToMorse(item));
+        acc.push(decoderBinaryToMorse(el));
       }
       return acc;
   
     }, []);
   
-    return resultArr.reduce((acc, item) => {
-      if (item === ' ') {
+    return resArr.reduce((acc, el) => {
+      if (el === ' ') {
         acc += " "
       }
       else {
         for (let key in MORSE_TABLE) {
-          key === item ? acc += MORSE_TABLE[key] : acc;
+            if(key === el) {
+                acc += MORSE_TABLE[key]
+            }
+         
         }
       }
   
@@ -67,11 +70,11 @@ function decode(expr) {
     }, '')
   }
   
-  function decoderBinaryToMorse(element) {
+  function decoderBinaryToMorse(el) {
     let word = [];
-    while (element >= 10) {
-      element % 10 === 0 ? word.push(".") : word.push("-");
-      element = Math.trunc(element / 100);
+    while (el >= 10) {
+      el % 10 === 0 ? word.push(".") : word.push("-");
+      el = Math.trunc(el / 100);
     }
     return word.reverse().join('');
   }
