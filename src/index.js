@@ -38,8 +38,44 @@ const MORSE_TABLE = {
 };
 
 function decode(expr) {
-    return expr.split('   ').map(a => a.split(' ').map( b => MORSE_TABLE[b]).join('')).join(' ');
-}
+    const resultArr = expr.match(/.{1,10}/g).reduce((acc, item) => {
+      if (item === "**********") {
+        acc.push(' ');
+      }
+      else if (item.startsWith(0)) {
+        acc.push(decoderBinaryToMorse(Number(item)));
+  
+      }
+      else {
+        acc.push(decoderBinaryToMorse(item));
+      }
+      return acc;
+  
+    }, []);
+  
+    return resultArr.reduce((acc, item) => {
+      if (item === ' ') {
+        acc += " "
+      }
+      else {
+        for (let key in MORSE_TABLE) {
+          key === item ? acc += MORSE_TABLE[key] : acc;
+        }
+      }
+  
+      return acc;
+    }, '')
+  }
+  
+  function decoderBinaryToMorse(element) {
+    let word = [];
+    while (element >= 10) {
+      element % 10 === 0 ? word.push(".") : word.push("-");
+      element = Math.trunc(element / 100);
+    }
+    return word.reverse().join('');
+  }
+  
 
 module.exports = {
     decode
